@@ -26,3 +26,8 @@
 *.EX filter=lfs diff=lfs merge=lfs -text
 *.in filter=lfs diff=lfs merge=lfs -text
 *.desktop filter=lfs diff=lfs merge=lfs -text
+*.config filter=lfs diff=lfs merge=lfs -text
+*.install filter=lfs diff=lfs merge=lfs -text
+*.links filter=lfs diff=lfs merge=lfs -text
+*.preinst filter=lfs diff=lfs merge=lfs -text
+*.templates filter=lfs diff=lfs merge=lfs -text
