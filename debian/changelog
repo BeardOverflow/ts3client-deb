@@ -1,0 +1,5 @@
+ts3client (3.2.1-1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- José Ángel Pastrana Padilla <japp0005@red.ujaen.es>  Sat, 25 Aug 2018 09:14:56 +0000
