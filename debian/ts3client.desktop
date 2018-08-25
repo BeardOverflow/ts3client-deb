@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=3.2.1
+Name=TeamSpeak 3 Client
+Name[es]=Cliente de TeamSpeak 3
+Comment=An audio client for communications through TS3 protocol
+Comment[es]=Un cliente de audio para comunicaciones mediante protocolo TS3
+Exec=/usr/bin/ts3client %u
+Icon=/usr/share/ts3client/icons/ts3client.png
+Terminal=false
+Type=Application
+Categories=Audio;AudioVideo;
+MimeType=x-scheme-handler/ts3server
+

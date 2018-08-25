@@ -42,3 +42,5 @@ ts3client_linux_amd64	/usr/lib/ts3client
 ts3client_runscript.sh	/usr/lib/ts3client
 update	/usr/lib/ts3client
 xcbglintegrations	/usr/lib/ts3client
+debian/ts3client.desktop	/usr/share/applications
+debian/icons/ts3client.png	/usr/share/ts3client/icons
