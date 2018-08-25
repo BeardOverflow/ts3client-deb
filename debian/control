@@ -8,7 +8,7 @@ Homepage: https://www.teamspeak.com
 
 Package: ts3client
 Architecture: amd64
-Pre-Depends: less (>= 481)
+Pre-Depends: less (>= 481), debconf (>= 1.5)
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: VoIP chat for online gaming (client)
  TeamSpeak is a quality, scalable application which enables people to speak
