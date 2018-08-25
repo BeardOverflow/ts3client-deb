@@ -1,0 +1,38 @@
+body {
+    background: #a2a9be;
+}
+
+div.center-container {
+    width: 779px;
+    height: 615px;
+}
+
+.ts-arrow {
+    color: #1f2836;
+}
+
+.ts-button {
+    width: 168px;
+    height: 56px;
+    background: #1f2836;
+    color: white;
+}
+
+.ts-button:active:focus,
+.ts-button:active:hover {
+    background: #576274;
+    color: white;
+    outline: none;
+}
+
+.ts-button:focus,
+.ts-button:hover {
+    background: #505c6e;
+    color: white;
+    outline: none;
+}
+
+#ts-continue-button {
+    position: relative;
+    bottom: 70px;
+}
