@@ -13,11 +13,40 @@ set -e
 # for details, see https://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+# Debconf need to be sourced outside any function.
+. /usr/share/debconf/confmodule
+
+# This function is a helper to abort the installation.
+abort_install() {
+        echo "${1}"
+        exit 1
+}
+
+# This function invokes debconf frontend.
+install_or_upgrade() {
+	# Clean flags to ensure the questions will be shown.
+	db_fset ts3client/view seen false
+	db_fset ts3client/license seen false
+
+	# Stack questions.
+	db_input critical ts3client/view || true
+	db_input critical ts3client/license || true
+
+	# Show questions.
+	db_go
+
+	# Retrieve answers.
+	db_get ts3client/view
+	db_get ts3client/license
+	if [ "${RET}" != "true" ]
+	then
+		abort_install "The installation have been aborted because you do not agree the licensing of this software."
+	fi
+}
 
 case "$1" in
     install|upgrade)
-	# Debconf need to be sourced to run the config file.
-	. /usr/share/debconf/confmodule
+	install_or_upgrade
     ;;
 
     abort-upgrade)
