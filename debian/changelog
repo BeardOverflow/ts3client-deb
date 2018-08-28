@@ -1,3 +1,9 @@
+ts3client (3.2.1-2) stable; urgency=medium
+
+  * Fix depends on libssl version for Ubuntu >= 18.04
+
+ -- José Ángel Pastrana Padilla <japp0005@red.ujaen.es>  Tue, 28 Aug 2018 16:02:33 +0000
+
 ts3client (3.2.1-1) stable; urgency=medium
 
   * Upstream version 3.2.1
