@@ -9,7 +9,7 @@ Homepage: https://www.teamspeak.com
 Package: ts3client
 Architecture: amd64
 Pre-Depends: debconf (>= 1.5)
-Depends: libc6, libqt5core5a, libc++1, libc++abi1, libpulse0, libquazip1, libqt5gui5, libqt5network5, libqt5widgets5, libqt5svg5, libgl1-mesa-glx, libqt5dbus5, libqt5sql5, libasound2, libssl1.0.0 | libssl1.0.2, libnss3, libnspr4, libfontconfig1, libx11-6, libxi6, libxcursor1, libxext6, libxfixes3, libxrender1, libxcomposite1, libxdamage1, libxtst6, libx11-xcb1, libxcb1, libudev1, libegl1-mesa, libqt5webenginecore5, libqt5quick5, libqt5webchannel5, libqt5qml5, libqt5positioning5, libqt5webenginewidgets5, libsrtp0, libqt5sql5-sqlite, libmbedtls10, openssl, ${shlibs:Depends}, ${misc:Depends}
+Depends: libc6, libqt5core5a, libc++1, libc++abi1, libpulse0, libquazip1, libqt5gui5, libqt5network5, libqt5widgets5, libqt5svg5, libgl1-mesa-glx, libqt5dbus5, libqt5sql5, libasound2, libssl1.0.0 | libssl1.0.2, libnss3, libnspr4, libfontconfig1, libx11-6, libxi6, libxcursor1, libxext6, libxfixes3, libxrender1, libxcomposite1, libxdamage1, libxtst6, libx11-xcb1, libxcb1, libudev1, libegl1-mesa, libqt5webenginecore5, libqt5quick5, libqt5webchannel5, libqt5qml5, libqt5positioning5, libqt5webenginewidgets5, libsrtp0, libqt5sql5-sqlite, libmbedtls10, openssl, ca-certificates, ${shlibs:Depends}, ${misc:Depends}
 Description: VoIP chat for online gaming (client)
  TeamSpeak is a quality, scalable application which enables people to speak
  with one another over the Internet. TeamSpeak consists of both client and
