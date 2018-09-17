@@ -9,6 +9,13 @@
    ! Important - Take note!
 ===============================================================================
 
+=== Client Release 3.2.2 17 Sep 2018
+! Fixed client freeze when plugins are using voice callbacks.
+! Cancel myTeamSpeak ID validation if there is no encryption key present.
+- Fixed problems with myTeamSpeak ID update.
+- Fixed Sync state handling if encryption was not set up.
+- myTeamSpeak ID is now properly updated after using sync fallback.
+
 === Client Release 3.2.1 14 Aug 2018
 ! Improved connecting to myTeamSpeak service
 
