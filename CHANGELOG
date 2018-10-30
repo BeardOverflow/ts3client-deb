@@ -9,6 +9,10 @@
    ! Important - Take note!
 ===============================================================================
 
+=== Client Release 3.2.3 01 Oct 2018
+- Fixed a crash in audio playback.
+  Thanks to our user Seebi for the great report!
+
 === Client Release 3.2.2 17 Sep 2018
 ! Fixed client freeze when plugins are using voice callbacks.
 ! Cancel myTeamSpeak ID validation if there is no encryption key present.

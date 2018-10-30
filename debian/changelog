@@ -1,3 +1,12 @@
+ts3client (3.2.3-1) stable; urgency=medium
+
+  * Upstream version 3.2.3
+
+    - Fixed a crash in audio playback.^M
+      Thanks to our user Seebi for the great report!
+
+ -- José Ángel Pastrana Padilla <japp0005@red.ujaen.es>  Tue, 30 Oct 2018 18:09:51 +0000
+
 ts3client (3.2.2-1) stable; urgency=medium
 
   * Upstream version 3.2.2
