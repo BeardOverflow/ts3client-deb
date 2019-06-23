@@ -1,8 +1,15 @@
+ts3client (3.2.5+ds.1-1) stable; urgency=medium
+
+  * Upstream version 3.2.5
+    - Fixed Qt security vulnerability
+
+ -- José Ángel Pastrana Padilla <japp0005@red.ujaen.es>  Sun, 23 Jun 2019 13:47:00 +0000
+
 ts3client (3.2.3-1) stable; urgency=medium
 
   * Upstream version 3.2.3
 
-    - Fixed a crash in audio playback.^M
+    - Fixed a crash in audio playback.
       Thanks to our user Seebi for the great report!
 
  -- José Ángel Pastrana Padilla <japp0005@red.ujaen.es>  Tue, 30 Oct 2018 18:09:51 +0000

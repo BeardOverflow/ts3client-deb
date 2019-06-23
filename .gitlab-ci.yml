@@ -1,0 +1,208 @@
+image: debian
+
+stages:
+  - upstream
+  - package
+  - test
+  - upload
+
+variables:
+  DEBIAN_FRONTEND: "noninteractive"
+  DEBCONF_NONINTERACTIVE_SEEN: "true"
+  DEBEMAIL: "José Ángel Pastrana Padilla <japp0005@red.ujaen.es>"
+  LANG: "en_US.UTF-8"
+  LANGUAGE: "en_US.UTF-8"
+  LC_ALL: "en_US.UTF-8"
+
+before_script:
+  - apt update && apt install -y locales locales-all
+  - eval $(cat debian/changelog | head -n1 | tr -d '()' | awk '{ print $1,$2 }' | sed 's/\(.*\) \(.*\)-\(.*\)/PROJECT_NAME=\1 PROJECT_VERSION=\2 DEB_VERSION=\3 TARBALL_SOURCES=\1_\2.orig.tar.gz DEB_NV=\1_\2 DEB_NVV=\1_\2-\3 DEB_NVVC=\1_\2-\3+${CI_COMMIT_SHA:0:8}/')
+
+upstream:tarball:
+  stage: upstream
+  script:
+    - tar --exclude=.git --exclude=.gitlab-ci.yml --exclude=debian -czf /tmp/${TARBALL_SOURCES} .
+    - mv /tmp/${TARBALL_SOURCES} .
+  artifacts:
+    name: "upstream+${CI_COMMIT_SHA:0:8}"
+    expire_in: 1 week
+    paths:
+      - ./*.orig.tar.gz
+
+.package:template: &package_template
+  allow_failure: true
+  stage: package
+  dependencies:
+    - upstream:tarball
+  script:
+    - apt update && apt install -y apt-utils build-essential debconf-utils debhelper devscripts dh-exec dpatch equivs fakeroot lintian quilt
+    - gpg --batch --import <(echo "${GPG_PUBLIC}")
+    - gpg --batch --passphrase "${GPG_PASSPHRASE}" --import <(echo "${GPG_PRIVATE}")
+    - dch --local "~${DISTRO_KEY}" --distribution "${DISTRO_KEY}" "Release for ${DISTRO_VALUE}"
+    - cat debian/changelog
+    - mv ${TARBALL_SOURCES} ..
+    - mkdir /tmp/{binaries-with-sources,sources-only}
+    - debuild -S -sa
+    - mv ../{*.build*,*.changes,*.dsc,*.debian.tar.*} /tmp/sources-only
+    - cp ../${TARBALL_SOURCES} /tmp/sources-only
+    - debuild -sa
+    - mv ../{*.deb,*.build*,*.changes,*.dsc,*.debian.tar.*} /tmp/binaries-with-sources
+    - cp ../${TARBALL_SOURCES} /tmp/binaries-with-sources
+    - mv /tmp/{binaries-with-sources,sources-only} .
+    - ls -laih binaries-with-sources sources-only
+  artifacts:
+    name: "$(cat debian/changelog | head -n1 | tr -d '()' | awk '{ print $1,$2 }')+${CI_COMMIT_SHA:0:8}"
+    expire_in: 1 week
+    paths:
+      - ./binaries-with-sources
+      - ./sources-only
+
+.test:template: &test_template
+  allow_failure: true
+  stage: test
+  script:
+    - echo '#_preseed_V1' > preseed.cfg
+    - echo 'ts3client ts3client/view note' >> preseed.cfg
+    - echo 'ts3client ts3client/license boolean true' >> preseed.cfg
+    - debconf-set-selections < preseed.cfg
+    - dpkg -i binaries-with-sources/*.deb || apt update && apt install -y -f
+    - dpkg -s ts3client | grep -sq '^Status:\ install ok installed'
+
+.upload:template: &upload_template
+  stage: upload
+  script:
+    - apt update && apt install -y dput
+    - gpg --batch --import <(echo "${GPG_PUBLIC}")
+    - gpg --batch --passphrase "${GPG_PASSPHRASE}" --import <(echo "${GPG_PRIVATE}")
+    - echo "${DPUT_CONFIG}" > ~/.dput.cf
+    - dput ts3client sources-only/*.changes
+
+.distro:debian:stretch: &distro_debian_stretch
+  image: debian:stretch
+  variables:
+    DISTRO_NAME: "debian"
+    DISTRO_KEY: "stretch"
+    DISTRO_VALUE: "Debian 9 Stretch"
+
+.distro:debian:buster: &distro_debian_buster
+  image: debian:buster
+  variables:
+    DISTRO_NAME: "debian"
+    DISTRO_KEY: "buster"
+    DISTRO_VALUE: "Debian 10 Buster"
+
+.distro:ubuntu:xenial: &distro_ubuntu_xenial
+  image: ubuntu:xenial
+  variables:
+    DISTRO_NAME: "ubuntu"
+    DISTRO_KEY: "xenial"
+    DISTRO_VALUE: "Ubuntu 16.04 Xenial Xerus"
+
+.distro:ubuntu:bionic: &distro_ubuntu_bionic
+  image: ubuntu:bionic
+  variables:
+    DISTRO_NAME: "ubuntu"
+    DISTRO_KEY: "bionic"
+    DISTRO_VALUE: "Ubuntu 18.04 Bionic Beaver"
+
+.distro:ubuntu:cosmic: &distro_ubuntu_cosmic
+  image: ubuntu:cosmic
+  variables:
+    DISTRO_NAME: "ubuntu"
+    DISTRO_KEY: "cosmic"
+    DISTRO_VALUE: "Ubuntu 18.10 Cosmic Cuttlefish"
+
+.distro:ubuntu:disco: &distro_ubuntu_disco
+  image: ubuntu:disco
+  variables:
+    DISTRO_NAME: "ubuntu"
+    DISTRO_KEY: "disco"
+    DISTRO_VALUE: "Ubuntu 19.04 Disco Dingo"
+
+package:debian:stretch:
+  <<: *distro_debian_stretch
+  <<: *package_template
+
+package:debian:buster:
+  <<: *distro_debian_buster
+  <<: *package_template
+
+package:ubuntu:xenial:
+  <<: *distro_ubuntu_xenial
+  <<: *package_template
+
+package:ubuntu:bionic:
+  <<: *distro_ubuntu_bionic
+  <<: *package_template
+
+package:ubuntu:cosmic:
+  <<: *distro_ubuntu_cosmic
+  <<: *package_template
+
+package:ubuntu:disco:
+  <<: *distro_ubuntu_disco
+  <<: *package_template
+
+test:debian:stretch:
+  <<: *distro_debian_stretch
+  <<: *test_template
+  dependencies:
+    - package:debian:stretch
+
+test:debian:buster:
+  <<: *distro_debian_buster
+  <<: *test_template
+  dependencies:
+    - package:debian:buster
+
+test:ubuntu:xenial:
+  <<: *distro_ubuntu_xenial
+  <<: *test_template
+  dependencies:
+    - package:ubuntu:xenial
+
+test:ubuntu:bionic:
+  <<: *distro_ubuntu_bionic
+  <<: *test_template
+  dependencies:
+    - package:ubuntu:bionic
+
+test:ubuntu:cosmic:
+  <<: *distro_ubuntu_cosmic
+  <<: *test_template
+  dependencies:
+    - package:ubuntu:cosmic
+
+test:ubuntu:disco:
+  <<: *distro_ubuntu_disco
+  <<: *test_template
+  dependencies:
+    - package:ubuntu:disco
+
+upload:ubuntu:xenial:
+  <<: *distro_ubuntu_xenial
+  <<: *upload_template
+  dependencies:
+    - package:ubuntu:xenial
+    - test:ubuntu:xenial
+
+upload:ubuntu:bionic:
+  <<: *distro_ubuntu_bionic
+  <<: *upload_template
+  dependencies:
+    - package:ubuntu:bionic
+    - test:ubuntu:bionic
+
+upload:ubuntu:cosmic:
+  <<: *distro_ubuntu_cosmic
+  <<: *upload_template
+  dependencies:
+    - package:ubuntu:cosmic
+    - test:ubuntu:cosmic
+
+upload:ubuntu:disco:
+  <<: *distro_ubuntu_disco
+  <<: *upload_template
+  dependencies:
+    - package:ubuntu:disco
+    - test:ubuntu:disco

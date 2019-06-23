@@ -9,6 +9,9 @@
    ! Important - Take note!
 ===============================================================================
 
+=== Client Release 3.2.5 17 Apr 2019
+- Fixed Qt security vulnerability
+
 === Client Release 3.2.3 01 Oct 2018
 - Fixed a crash in audio playback.
   Thanks to our user Seebi for the great report!
